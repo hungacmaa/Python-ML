@@ -130,6 +130,6 @@ Age = 50
 # else:
 #     print("Diabetic")
 
-proba = loaded_model.predict_proba([[Glucose, BMI, Age]])
-print(proba)
-print("Confidence: " + str(round(np.amax(proba[0]) * 100 ,2)) + "%")
+# proba = loaded_model.predict_proba([[Glucose, BMI, Age]])
+# print(proba)
+# print("Confidence: " + str(round(np.amax(proba[0]) * 100 ,2)) + "%")
