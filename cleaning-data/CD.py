@@ -16,15 +16,16 @@ df.shape
 
 # select numerical columns
 df_numeric = df.select_dtypes(include=[np.number])
-numeric_cols = df_numeric.columns.values
+numeric_cols = df_numeric.columns.values # tập các trường kiểu số
 # select non-numeric columns
 df_non_numeric = df.select_dtypes(exclude=[np.number])
-non_numeric_cols = df_non_numeric.columns.values
+non_numeric_cols = df_non_numeric.columns.values# tập các trường không phải kiểu số
 
 
 # % of values missing in each column
 values_list = list()
 cols_list = list()
+# tính tỷ lệ phần trăm số giá trị bị thiếu của mỗi cột
 for col in df.columns:
     pct_missing = np.mean(df[col].isnull())*100
     cols_list.append(col)
@@ -35,6 +36,7 @@ pct_missing_df['pct_missing'] = values_list
 pct_missing_df.loc[pct_missing_df.pct_missing > 0].plot(kind='bar', figsize=(12,8))
 plt.show()
 
+# loại bỏ các cột có tỷ lệ null < 0.5%Z
 less_missing_values_cols_list = list(pct_missing_df.loc[(pct_missing_df.pct_missing < 0.5) & (pct_missing_df.pct_missing > 0), 'col'].values)
 df.dropna(subset=less_missing_values_cols_list, inplace=True)
 
@@ -42,6 +44,7 @@ df.dropna(subset=less_missing_values_cols_list, inplace=True)
 _40_pct_missing_cols_list = list(pct_missing_df.loc[pct_missing_df.pct_missing > 40, 'col'].values)
 df.drop(columns=_40_pct_missing_cols_list, inplace=True)
 
+#thêm giá trị trung bình vào các cột null
 df_numeric = df.select_dtypes(include=[np.number])
 numeric_cols = df_numeric.columns.values
 for col in numeric_cols:
@@ -51,6 +54,7 @@ for col in numeric_cols:
         med = df[col].median() #impute with the median
         df[col] = df[col].fillna(med)
 
+#với những cột mang giá trị không phải số ta sẽ lấp bằng giá trị phổ biến nhất của cột đó
 df_non_numeric = df.select_dtypes(exclude=[np.number])
 non_numeric_cols = df_non_numeric.columns.values
 for col in non_numeric_cols:

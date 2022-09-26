@@ -56,94 +56,97 @@ song_subset = song_playcount_subset['song']
 
 triplet_dataset_sub_song = pd.read_csv('triplet_dataset_sub_song. csv')
 
-conn = sqlite3.connect('track_metadata.db')
-track_metadata_df_sub = pd.read_sql_query("select * from songs", conn)
-conn.close()
+# conn = sqlite3.connect('track_metadata.db')
+# track_metadata_df_sub = pd.read_sql_query("select * from songs", conn)
+# conn.close()
 
 # merge data
-del(track_metadata_df_sub['track_id'])
-del(track_metadata_df_sub['artist_mbid'])
-track_metadata_df_sub = track_metadata_df_sub.drop_duplicates(['song_id'])
-triplet_dataset_sub_song_merged = pd.merge(triplet_dataset_sub_song, track_metadata_df_sub, how='left', left_on='song', right_on='song_id')
-triplet_dataset_sub_song_merged.rename(columns={'play_count':'listen_count'},inplace=True)
-del(triplet_dataset_sub_song_merged['song_id'])
-del(triplet_dataset_sub_song_merged['artist_id'])
-del(triplet_dataset_sub_song_merged['duration'])
-del(triplet_dataset_sub_song_merged['artist_familiarity'])
-del(triplet_dataset_sub_song_merged['artist_hotttnesss'])
-del(triplet_dataset_sub_song_merged['track_7digitalid'])
-del(triplet_dataset_sub_song_merged['shs_perf'])
-del(triplet_dataset_sub_song_merged['shs_work'])
+# del(track_metadata_df_sub['track_id'])
+# del(track_metadata_df_sub['artist_mbid'])
+# track_metadata_df_sub = track_metadata_df_sub.drop_duplicates(['song_id'])
+# triplet_dataset_sub_song_merged = pd.merge(triplet_dataset_sub_song, track_metadata_df_sub, how='left', left_on='song', right_on='song_id')
+# triplet_dataset_sub_song_merged.rename(columns={'play_count':'listen_count'},inplace=True)
+# del(triplet_dataset_sub_song_merged['song_id'])
+# del(triplet_dataset_sub_song_merged['artist_id'])
+# del(triplet_dataset_sub_song_merged['duration'])
+# del(triplet_dataset_sub_song_merged['artist_familiarity'])
+# del(triplet_dataset_sub_song_merged['artist_hotttnesss'])
+# del(triplet_dataset_sub_song_merged['track_7digitalid'])
+# del(triplet_dataset_sub_song_merged['shs_perf'])
+# del(triplet_dataset_sub_song_merged['shs_work'])
 
+# triplet_dataset_sub_song_merged.to_csv(path_or_buf='triplet_dataset_sub_song_merged.csv', index = False)
+
+triplet_dataset_sub_song_merged = pd.read_csv("triplet_dataset_sub_song_merged.csv")
 
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 
-# popular_songs = triplet_dataset_sub_song_merged[['title','listen_count']].groupby('title').sum().reset_index()
-# popular_songs_top_20 = popular_songs.sort_values('listen_count', ascending=False).head(n=20)
-# objects = (list(popular_songs_top_20['title']))
-# y_pos = np.arange(len(objects))
-# performance = list(popular_songs_top_20['listen_count'])
+popular_songs = triplet_dataset_sub_song_merged[['title','listen_count']].groupby('title').sum().reset_index()
+popular_songs_top_20 = popular_songs.sort_values('listen_count', ascending=False).head(n=20)
+objects = (list(popular_songs_top_20['title']))
+y_pos = np.arange(len(objects))
+performance = list(popular_songs_top_20['listen_count'])
 
-# plt.bar(y_pos, performance, align='center', alpha=0.5)
-# plt.xticks(y_pos, objects, rotation='vertical')
-# plt.ylabel('Item count')
-# plt.title('Most popular songs')
-# plt.show()
+plt.bar(y_pos, performance, align='center', alpha=0.5)
+plt.xticks(y_pos, objects, rotation='vertical')
+plt.ylabel('Item count')
+plt.title('Most popular songs')
+plt.show()
 
-# popular_artists = triplet_dataset_sub_song_merged[["artist_name", "listen_count"]].groupby("artist_name").sum().reset_index()
-# popular_artists_top_20 = popular_artists.sort_values('listen_count', ascending=False).head(n=20)
+popular_artists = triplet_dataset_sub_song_merged[["artist_name", "listen_count"]].groupby("artist_name").sum().reset_index()
+popular_artists_top_20 = popular_artists.sort_values('listen_count', ascending=False).head(n=20)
 
-# x = list(popular_artists_top_20["artist_name"])
-# y = list(popular_artists_top_20["listen_count"])
-# pos = np.arange(20)
+x = list(popular_artists_top_20["artist_name"])
+y = list(popular_artists_top_20["listen_count"])
+pos = np.arange(20)
 
-# plt.bar(pos, y, align='center', alpha=0.5, color='green')
-# plt.xticks(pos, x, rotation='vertical')
-# plt.ylabel('Item count')
-# plt.title("Most popular artists")
-# plt.show()
+plt.bar(pos, y, align='center', alpha=0.5, color='green')
+plt.xticks(pos, x, rotation='vertical')
+plt.ylabel('Item count')
+plt.title("Most popular artists")
+plt.show()
 
-# user_song_count_distribution = triplet_dataset_sub_song_merged[['user','title']].groupby('user').count().reset_index().sort_values(by='title', ascending = False)
-# print(user_song_count_distribution.title.describe())
+user_song_count_distribution = triplet_dataset_sub_song_merged[['user','title']].groupby('user').count().reset_index().sort_values(by='title', ascending = False)
+print(user_song_count_distribution.title.describe())
 
-# x = user_song_count_distribution.title
-# n, bins, patches = plt.hist(x, 50, facecolor='green', alpha=0.75)
-# plt.xlabel('Play Counts')
-# plt.ylabel('Probability')
-# plt.title(r'$\mathrm{Histogram\ of\ User\ Play\ Count\ Distribution}\ $')
-# plt.grid(True)
-# plt.show()
+x = user_song_count_distribution.title
+n, bins, patches = plt.hist(x, 50, facecolor='green', alpha=0.75)
+plt.xlabel('Play Counts')
+plt.ylabel('Probability')
+plt.title(r'$\mathrm{Histogram\ of\ User\ Play\ Count\ Distribution}\ $')
+plt.grid(True)
+plt.show()
 
 def create_popularity_recommendation(train_data, user_id, item_id):
     #Get a count of user_ids for each unique song as recommendation score
-    train_data_grouped = train_data.groupby([item_id]).agg({user_id: 'count'}).reset_index()
+    train_data_grouped = train_data.groupby([item_id]).agg({user_id: 'count'}).reset_index() # danh sách bài hát và số lượng người nghe tương ứng
     train_data_grouped.rename(columns = {user_id: 'score'},inplace=True)
     #Sort the songs based upon recommendation score
     train_data_sort = train_data_grouped.sort_values(['score', item_id], ascending = [0,1])
     #Generate a recommendation rank based upon score
-    train_data_sort['Rank'] = train_data_sort['score'].rank(ascending=0, method='first')
+    train_data_sort['Rank'] = train_data_sort['score'].rank(ascending=0, method='first') #xếp hạng các bài hát theo số lượng người nghe giảm dần
     #Get the top 10 recommendations
-    popularity_recommendations = train_data_sort.head(20)
+    popularity_recommendations = train_data_sort.head(20) # lấy ra 20 bài đầu tiên
     return popularity_recommendations
 
-# recommendations = create_popularity_recommendation(triplet_dataset_sub_song_merged,'user','title')
+recommendations = create_popularity_recommendation(triplet_dataset_sub_song_merged,'user','title')
 
 song_count_subset = song_count_df.head(n=5000)
 user_subset = list(play_count_subset.user)
 song_subset = list(song_count_subset.song)
 triplet_dataset_sub_song_merged_sub = triplet_dataset_sub_song_merged[triplet_dataset_sub_song_merged.song.isin(song_subset)]
+print(triplet_dataset_sub_song_merged_sub['title'].unique().shape)
 
-
-# from sklearn.model_selection import train_test_split
-# import Recommenders
-# train_data, test_data = train_test_split(triplet_dataset_sub_song_merged_sub, test_size =0.30, random_state=0)
-# is_model = Recommenders.item_similarity_recommender_py()
-# is_model.create(train_data, 'user', 'title')
-# user_id = list(train_data.user)[7]
-# user_items = is_model.get_user_items(user_id)
-# is_model.recommend(user_id)
+from sklearn.model_selection import train_test_split
+import Recommenders
+train_data, test_data = train_test_split(triplet_dataset_sub_song_merged_sub, test_size =0.30, random_state=0)
+is_model = Recommenders.item_similarity_recommender_py()
+is_model.create(train_data, 'user', 'title')
+user_id = list(train_data.user)[1]
+user_items = is_model.get_user_items(user_id)
+xyz = is_model.recommend(user_id)
 
 triplet_dataset_sub_song_merged_sum_df = triplet_dataset_sub_song_merged[['user','listen_count']].groupby('user').sum().reset_index()
 triplet_dataset_sub_song_merged_sum_df.rename(columns={'listen_count':'total_listen_count'},inplace=True)
