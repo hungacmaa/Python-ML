@@ -13,23 +13,23 @@ class popularity_recommender_py():
         self.popularity_recommendations = None
         
     #Create the popularity based recommender system model
-    def create(self, train_data, user_id, item_id):
+    def create(self, train_data, user_id, item_id): #tạo model đề xuất
         self.train_data = train_data
         self.user_id = user_id
         self.item_id = item_id
 
         #Get a count of user_ids for each unique song as recommendation score
-        train_data_grouped = train_data.groupby([self.item_id]).agg({self.user_id: 'count'}).reset_index()
-        train_data_grouped.rename(columns = {user_id: 'score'},inplace=True)
+        train_data_grouped = train_data.groupby([self.item_id]).agg({self.user_id: 'count'}).reset_index() #tập bài hát và số lượng người nghe tương ứng
+        train_data_grouped.rename(columns = {user_id: 'score'},inplace=True) # lượng người nghe ta sẽ coi là điểm
     
         #Sort the songs based upon recommendation score
         train_data_sort = train_data_grouped.sort_values(['score', self.item_id], ascending = [0,1])
     
         #Generate a recommendation rank based upon score
-        train_data_sort['Rank'] = train_data_sort['score'].rank(ascending=0, method='first')
+        train_data_sort['Rank'] = train_data_sort['score'].rank(ascending=0, method='first') # xếp hạng 
         
         #Get the top 10 recommendations
-        self.popularity_recommendations = train_data_sort.head(10)
+        self.popularity_recommendations = train_data_sort.head(10) #
 
     #Use the popularity based recommender system model to
     #make recommendations
@@ -59,41 +59,50 @@ class item_similarity_recommender_py():
         self.item_similarity_recommendations = None
         
     #Get unique items (songs) corresponding to a given user
-    def get_user_items(self, user):
+    def get_user_items(self, user): # lấy ra những bài hát của một người dùng cụ thể
         user_data = self.train_data[self.train_data[self.user_id] == user]
         user_items = list(user_data[self.item_id].unique())
         
         return user_items
         
     #Get unique users for a given item (song)
-    def get_item_users(self, item):
+    def get_item_users(self, item): # lấy ra những người dùng mà nghe 1 bài hát
         item_data = self.train_data[self.train_data[self.item_id] == item]
         item_users = set(item_data[self.user_id].unique())
             
         return item_users
         
     #Get unique items (songs) in the training data
-    def get_all_items_train_data(self):
+    def get_all_items_train_data(self): # lấy ra danh sách bài hát trong tập train
         all_items = list(self.train_data[self.item_id].unique())
             
         return all_items
         
     #Construct cooccurence matrix
-    def construct_cooccurence_matrix(self, user_songs, all_songs):
+    def construct_cooccurence_matrix(self, user_songs, all_songs): # tạo ra ma trận liên quan
             
         ####################################
         #Get users for all songs in user_songs.
         ####################################
+        # đức nghe [a, b]
+        # duyet -> a -> [x, y, z]
+        # duyet b -> [j, k, l]
+        # -> [[x, y, z], [j, k, l]]
         user_songs_users = []        
-        for i in range(0, len(user_songs)):
+        # lay ra tap nguoi nghe cua nhung bai hat cua nguoi muon de xuat nghe
+        for i in range(0, len(user_songs)): 
             user_songs_users.append(self.get_item_users(user_songs[i]))
+        print("dmmm 1")
             
         ###############################################
         #Initialize the item cooccurence matrix of size 
         #len(user_songs) X len(songs)
         ###############################################
         cooccurence_matrix = np.matrix(np.zeros(shape=(len(user_songs), len(all_songs))), float)
-           
+        print("dmmm 2")
+        #  a b c d e
+        # a
+        # b
         #############################################################
         #Calculate similarity between user songs and all unique songs
         #in the training data
@@ -116,11 +125,11 @@ class item_similarity_recommender_py():
                     #Calculate union of listeners of songs i and j
                     users_union = users_i.union(users_j)
                     
-                    cooccurence_matrix[j,i] = float(len(users_intersection))/float(len(users_union))
+                    cooccurence_matrix[j,i] = float(len(users_intersection))/float(len(users_union)) # luong nguoi nghe chung/ tong luong nguoi nghe
                 else:
                     cooccurence_matrix[j,i] = 0
                     
-        
+        print("dmmm 3")
         return cooccurence_matrix
 
     
@@ -142,7 +151,7 @@ class item_similarity_recommender_py():
         df = pandas.DataFrame(columns=columns)
          
         #Fill the dataframe with top 10 item based recommendations
-        rank = 1 
+        rank = 1
         for i in range(0,len(sort_index)):
             if ~np.isnan(sort_index[i][0]) and all_songs[sort_index[i][1]] not in user_songs and rank <= 10:
                 df.loc[len(df)]=[user,all_songs[sort_index[i][1]],sort_index[i][0],rank]
@@ -178,12 +187,13 @@ class item_similarity_recommender_py():
         all_songs = self.get_all_items_train_data()
         
         print("no. of unique songs in the training set: %d" % len(all_songs))
-         
+        
         ###############################################
         #C. Construct item cooccurence matrix of size 
         #len(user_songs) X len(songs)
         ###############################################
         cooccurence_matrix = self.construct_cooccurence_matrix(user_songs, all_songs)
+        
         
         #######################################################
         #D. Use the cooccurence matrix to make recommendations
