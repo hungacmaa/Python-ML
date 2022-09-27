@@ -6,43 +6,46 @@ Created on Tue Sep 13 16:01:29 2022
 """
 import pandas as pd
 import sqlite3
-# triplet_dataset = pd.read_csv(filepath_or_buffer='train_triplets.txt', nrows=10000,sep='\t', header=None, names=['user','song','play_count'])
-# print(triplet_dataset)
-# output_dict = {}
-# with open('train_triplets.txt') as f:
-#     for line_number, line in enumerate(f):
-#         user = line.split('\t')[0]
-#         play_count = int(line.split('\t')[2])
-#         if user in output_dict:
-#             play_count +=output_dict[user]
-#             output_dict.update({user:play_count})
-#         output_dict.update({user:play_count})
-# output_list = [{'user':k,'play_count':v} for k,v in output_dict.items()]
-# play_count_df = pd.DataFrame(output_list)
-# play_count_df = play_count_df.sort_values(by = 'play_count', ascending = False)
-# play_count_df.to_csv(path_or_buf='user_playcount_df.csv', index = False)
+triplet_dataset = pd.read_csv(filepath_or_buffer="train_triplets.txt", nrows=10000,sep='\t', header=None, names=['user','song','play_count'])
+print(triplet_dataset)
+
+output_dict = {}
+with open('train_triplets.txt') as f:
+    for line_number, line in enumerate(f):
+        user = line.split('\t')[0]
+        play_count = int(line.split('\t')[2])
+        if user in output_dict:
+            play_count +=output_dict[user]
+            output_dict.update({user:play_count})
+        output_dict.update({user:play_count})
+output_list = [{'user':k,'play_count':v} for k,v in output_dict.items()]
+play_count_df = pd.DataFrame(output_list)
+play_count_df = play_count_df.sort_values(by = 'play_count', ascending = False)
+play_count_df.to_csv(path_or_buf='user_playcount_df.csv', index = False)
 play_count_df = pd.read_csv('user_playcount_df.csv')
+
 # print(play_count_df.shape)
-# output_dict = {}
-# with open('train_triplets.txt') as f:
-#     for line_number, line in enumerate(f):
-#         song = line.split('\t')[1]
-#         play_count = int(line.split('\t')[2])
-#         if song in output_dict:
-#             play_count +=output_dict[song]
-#             output_dict.update({song:play_count})
-#         output_dict.update({song:play_count})
-# output_list = [{'song':k,'play_count':v} for k,v in output_dict.items()]
-# song_count_df = pd.DataFrame(output_list)
-# song_count_df = song_count_df.sort_values(by = 'play_count', ascending = False)
-# song_count_df.to_csv(path_or_buf='song_playcount_df.csv', index = False)
+output_dict = {}
+with open('train_triplets.txt') as f:
+    for line_number, line in enumerate(f):
+        song = line.split('\t')[1]
+        play_count = int(line.split('\t')[2])
+        if song in output_dict:
+            play_count +=output_dict[song]
+            output_dict.update({song:play_count})
+        output_dict.update({song:play_count})
+output_list = [{'song':k,'play_count':v} for k,v in output_dict.items()]
+song_count_df = pd.DataFrame(output_list)
+song_count_df = song_count_df.sort_values(by = 'play_count', ascending = False)
+song_count_df.to_csv(path_or_buf='song_playcount_df.csv', index = False)
 
 song_count_df = pd.read_csv("song_playcount_df.csv")
 
-# total_play_count = sum(song_count_df["play_count"])
-# a = (float(play_count_df.head(n=100000).play_count.sum())/total_play_count)*100
+total_play_count = sum(song_count_df["play_count"]) #tổng số lượt nghe
+a = (float(play_count_df.head(n=100000).play_count.sum())/total_play_count)*100
 play_count_subset = play_count_df.head(n=100000)
 user_subset = play_count_subset['user']
+
 
 song_playcount_subset = song_count_df.head(30000)
 song_subset = song_playcount_subset['song']
