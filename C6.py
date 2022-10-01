@@ -61,8 +61,8 @@ plt.show()
 
 #training the model
 
-x = pd.DataFrame(np.c_[df['LSTAT'], df['RM']], columns = ['LSTAT','RM'])
-Y = df['MEDV']
+x = pd.DataFrame(np.c_[df['LSTAT'], df['RM']], columns = ['LSTAT','RM']) # tập giá trị features
+Y = df['MEDV'] # tâp target
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, Y_train, Y_test = train_test_split(x, Y, test_size = 0.3, random_state=5)
@@ -78,6 +78,7 @@ model = LinearRegression()
 model.fit(x_train, Y_train)
 
 price_pred = model.predict(x_test)
+print(price_pred)
 
 print('R-Squared: %.4f' % model.score(x_test, Y_test))
 
@@ -108,10 +109,7 @@ x = pd.DataFrame(np.c_[df['LSTAT'], df['RM']], columns = ['LSTAT','RM'])
 Y = df['MEDV']
 fig = plt.figure(figsize=(18,15))
 ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x['LSTAT'],
-x['RM'],
-Y,
-c='b')
+ax.scatter(x['LSTAT'], x['RM'], Y, c='b')
 ax.set_xlabel("LSTAT")
 ax.set_ylabel("RM")
 ax.set_zlabel("MEDV")
@@ -132,5 +130,73 @@ alpha = 0.4)
 plt.show()
 
 #Polynomial Regression
-df = pd.read_csv('abc.csv')
+df = pd.read_csv('polynomial.csv')
 plt.scatter(df.x,df.y)
+
+model = LinearRegression()
+x = df.x[0:6, np.newaxis] #---convert to 2D array---
+y = df.y[0:6, np.newaxis] #---convert to 2D array---
+model.fit(x,y)
+#---perform prediction---
+y_pred = model.predict(x)
+#---plot the training points---
+plt.scatter(x, y, s=10, color='b')
+#---plot the straight line---
+plt.plot(x, y_pred, color='r')
+plt.show()
+#---calculate R-Squared---
+print('R-Squared for training set: %.4f' % model.score(x,y))
+
+from sklearn.preprocessing import PolynomialFeatures
+degree = 2 # bậc
+polynomial_features = PolynomialFeatures(degree = degree)
+
+x_poly = polynomial_features.fit_transform(x)
+print(x_poly)
+
+print(polynomial_features.get_feature_names('x'))
+
+model = LinearRegression()
+model.fit(x_poly, y)
+y_poly_pred = model.predict(x_poly)
+#---plot the points---
+plt.scatter(x, y, s=10)
+#---plot the regression line---
+plt.plot(x, y_poly_pred)
+plt.show()
+
+print(model.intercept_)
+print(model.coef_)
+
+# điểm dự đoán
+print('R-Squared for training set: %.4f' % model.score(x_poly,y))
+
+# Sử dụng Polynomial Regression với tập dữ liệu boston
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+dataset = load_boston()
+df = pd.DataFrame(dataset.data, columns=dataset.feature_names)
+df['MEDV'] = dataset.target
+x = pd.DataFrame(np.c_[df['LSTAT'], df['RM']], columns = ['LSTAT','RM'])
+Y = df['MEDV']
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, Y_train, Y_test = train_test_split(x, Y, test_size = 0.3, random_state=5)
+
+#---use a polynomial function of degree 2---
+degree = 2
+polynomial_features= PolynomialFeatures(degree = degree)
+x_train_poly = polynomial_features.fit_transform(x_train)
+
+#---print out the formula---
+print(polynomial_features.get_feature_names(['x','y']))
+
+model = LinearRegression()
+model.fit(x_train_poly, Y_train)
+
+x_test_poly = polynomial_features.fit_transform(x_test)
+print('R-Squared: %.4f' % model.score(x_test_poly, Y_test))
