@@ -110,25 +110,28 @@ plt.plot(x1,y1)
 plt.xlabel("mean radius")
 plt.ylabel("Probability")
 
-print(log_regress.predict_proba([[20]])) # [[0.93489354 0.06510646]]
+print(log_regress.predict_proba([[20]])) # [[0.99538685 0.00461315]]
 print(log_regress.predict([[20]])[0]) # 0
 
 print(log_regress.predict_proba([[8]])) # [[0.93489354 0.06510646]]
-print(log_regress.predict([[8]])[0]) # 0
+print(log_regress.predict([[8]])[0]) # 1
 
+# import thư viện
 from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+
 cancer = load_breast_cancer() # Load dataset
 
-from sklearn.model_selection import train_test_split
+#split data
 train_set, test_set, train_labels, test_labels = train_test_split(
 cancer.data, # features
 cancer.target, # labels
 test_size = 0.25, # split ratio
-random_state = 1, # set random seed
+random_state = 1, # set random seed -> dùng để cố định tập split mỗi khi chạy lại
 stratify = cancer.target) # randomize based on labels
 
-from sklearn import linear_model
-x = train_set[:,0:30] # mean radius
+x = train_set[:,0:30]
 y = train_labels # 0: malignant, 1: benign
 log_regress = linear_model.LogisticRegression()
 log_regress.fit(X = x, y = y)
@@ -136,7 +139,6 @@ log_regress.fit(X = x, y = y)
 print(log_regress.intercept_) #
 print(log_regress.coef_) #
 
-import pandas as pd
 #---get the predicted probablities and convert into a dataframe---
 preds_prob = pd.DataFrame(log_regress.predict_proba(X=test_set))
 #---assign column names to prediction---
