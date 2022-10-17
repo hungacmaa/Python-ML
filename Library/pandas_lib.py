@@ -64,4 +64,4 @@ df.insert(2, 'chèn', df['một'])
 
 print(df)
 
-print(df['một'] == 3.0 && df['hai'] == 3.0)
+print((df['một'] == 3.0 and df['hai'] == 3.0))
