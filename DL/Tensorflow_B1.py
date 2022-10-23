@@ -87,3 +87,7 @@ with tf.Session() as sess:
     x_data = 5
     result = sess.run(f1,feed_dict={x1:x_data}) # cách truyền giá trị cho placeholder
 print(result)
+
+E = tf.nn.tanh([10,1.])
+sess.run(E)
+sess.close()
