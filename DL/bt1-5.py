@@ -16,10 +16,8 @@ print("Shape of the Dataset:",store.shape)
 store.head(5)
 df_new = df.merge(store,on=["Store"], how="inner")
 print(df_new.shape)
-print("Distinct number of Stores :", len(df_new["Store"].
-unique()))
-print("Distinct number of Days :", len(df_new["Date"].
-unique()))
+print("Distinct number of Stores :", len(df_new["Store"]. unique()))
+print("Distinct number of Days :", len(df_new["Date"]. unique()))
 print("Average daily sales of all stores : ",round(df_new["Sales"].mean(),2))
 print(df_new.dtypes)
 df_new["DayOfWeek"].value_counts()
@@ -30,7 +28,7 @@ df_new["Month"] = df_new["Date"].dt.month
 df_new["Quarter"] = df_new["Date"].dt.quarter
 df_new["Year"] = df_new["Date"].dt.year
 df_new["Day"] = df_new["Date"].dt.day
-df_new["Week"] = df_new["Date"].dt.week
+df_new["Week"] = df_new["Date"].dt.isocalendar().week
 df_new["Season"] = np.where(df_new["Month"].isin([3,4,5]),"Spring",
 np.where(df_new["Month"].isin([6,7,8]),
 "Summer",
@@ -39,8 +37,7 @@ np.where(df_new["Month"].isin
 np.where(df_new["Month"].isin
 ([12,1,2]),"Winter","None"))))
 #Using the head command to view (only) the data and the newly engineered features
-print(df_new[["Date","Year","Month","Day","Week","Quarter",
-"Season"]].head())
+print(df_new[["Date","Year","Month","Day","Week","Quarter","Season"]].head())
 
 #Import matplotlib, python most popular data visualizing library
 import matplotlib.pyplot as plt

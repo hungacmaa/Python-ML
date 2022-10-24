@@ -88,7 +88,7 @@ with tf.Session() as sess:
     result = sess.run(f1,feed_dict={x1:x_data}) # cách truyền giá trị cho placeholder
 print(result)
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 a = tf.constant([[1, 2, 3], 
                  [4, 5, 6]], 
                 tf.float32)
@@ -138,8 +138,8 @@ model.fit(train_data, labels, epochs=10, batch_size=32)
 #Make predictions from the trained model
 predictions = model.predict(test_data)
 
-=======
+# =======
 E = tf.nn.tanh([10,1.])
 sess.run(E)
 sess.close()
->>>>>>> 655ecc5f52ec1657702ee9a423abb3c189b27008
+# >>>>>>> 655ecc5f52ec1657702ee9a423abb3c189b27008
