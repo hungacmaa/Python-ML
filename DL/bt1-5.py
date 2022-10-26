@@ -78,10 +78,8 @@ estimator=np.size)
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 target = ["Sales"]
-numeric_columns = ["Customers","Open","Promo","Promo2",
-"StateHoliday","SchoolHoliday","CompetitionDistance"]
-categorical_columns = ["DayOfWeek","Quarter","Month","Year",
-"StoreType","Assortment","Season"]
+numeric_columns = ["Customers","Open","Promo","Promo2","StateHoliday","SchoolHoliday","CompetitionDistance"]
+categorical_columns = ["DayOfWeek","Quarter","Month","Year","StoreType","Assortment","Season"]
 #Define a function that will intake the raw dataframe and the column name and return a one hot encoded DF
 def create_ohe(df, col):
     le = LabelEncoder()
@@ -99,3 +97,20 @@ print("Shape of Data:",temp.shape)
 print("Distinct Datatypes:",temp.dtypes.unique())
 print(temp.columns[temp.dtypes=="object"])
 temp["StateHoliday"].unique()
+temp["StateHoliday"]= np.where(temp["StateHoliday"]== '0',0,1)
+#One last check of the data type
+temp.dtypes.unique()
+
+from sklearn.model_selection import train_test_split
+#Create train and test dataset with an 80:20 split
+x_train, x_test, y_train, y_test = train_test_split(temp, df_new[target],test_size=0.2,random_state=2018)
+#Further divide training dataset into train and validation dataset with an 90:10 split
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train,test_size=0.1,random_state=2018)
+
+#Check the sizes of all newly created datasets
+print("Shape of x_train:",x_train.shape)
+print("Shape of x_val:",x_val.shape)
+print("Shape of x_test:",x_test.shape)
+print("Shape of y_train:",y_train.shape)
+print("Shape of y_val:",y_val.shape)
+print("Shape of y_test:",y_test.shape)
