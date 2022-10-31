@@ -29,8 +29,7 @@ model.add(Dense(1,activation = "sigmoid")) #OutputLayer
 #Configure the model
 model.compile(optimizer='Adam',loss='binary_crossentropy',metrics =['accuracy'])
 #Train the model
-model.fit(x_train, y_train, batch_size=64, epochs=3,
-validation_data=(x_val,y_val))
+history = model.fit(x_train, y_train, batch_size=30, epochs=100, validation_data=(x_val,y_val))
 #evaluate(x=None, y=None, batch_size=None, verbose=1, sample_weight=None, steps=None)
 print(model.evaluate(x_test,y_test))
 print(model.metrics_names)
