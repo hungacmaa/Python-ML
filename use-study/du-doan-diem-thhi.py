@@ -117,7 +117,7 @@ print("diem cua bo train: "+str(model.score(x_train, Y_train)))
 print("diem cua bo test: "+str(model.score(x_test, Y_test)))
 # print(model.intercept_)
 # print(model.coef_)
-print(model.predict([[0, 0, 0]]))
+print(model.predict([[2, 2, 2]]))
 
 
 # poly
@@ -141,6 +141,6 @@ print("diem cua bo train: "+str(model.score(x_train, Y_train)))
 print("diem cua bo test: "+str(model.score(x_test, Y_test)))
 # print(model.intercept_)
 # print(model.coef_)
-check = [[0,0,0]]
+check = [[2,2,2]]
 check = poly_features.fit_transform(check)
 model.predict(check)
