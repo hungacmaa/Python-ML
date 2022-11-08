@@ -18,14 +18,14 @@ data.index = range(1, so_sv+1) #sửa lại index
 
 data.info()
 
-data = data.replace(0, np.NaN)
+# data = data.replace(0, np.NaN)
 print(data.eq(0).sum())
 print(data.isnull().sum())
 print((data.isnull().sum()/so_sv)*100) # phần trăm ô null
 
 data.fillna(data.mean(numeric_only=True), inplace = True) # replace NaN with the mean
 
-data.to_csv("diemtk.csv", index = False)
+# data.to_csv("diemtk.csv", index = False)
 
 # ------------------------------------------------------------------------
 
@@ -107,17 +107,21 @@ plt.show()
 X = data[['cc','kt','tl']].values
 y = data.iloc[:,3].values
 
-x_train, x_test, Y_train, Y_test = train_test_split(X, y, test_size = 0.09, random_state=5)
+x_train, x_test, Y_train, Y_test = train_test_split(X, y, test_size = 0.2, random_state=5)
 
 from sklearn import linear_model
-
+from sklearn.metrics import mean_squared_error, r2_score
 model = linear_model.LinearRegression()
 model.fit(x_train, Y_train)
+y_pred = model.predict(X)
 print("diem cua bo train: "+str(model.score(x_train, Y_train)))
 print("diem cua bo test: "+str(model.score(x_test, Y_test)))
+print("mse: "+str(mean_squared_error(Y_test, y_pred))) #cang thap cang tot
+print("r2: "+str(r2_score(y, y_pred))) #cang cao cang tot
+
 # print(model.intercept_)
 # print(model.coef_)
-print(model.predict([[2, 2, 2]]))
+print(model.predict([[6, 7, 8]]))
 
 
 # poly
