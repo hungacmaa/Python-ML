@@ -54,5 +54,17 @@ b = np.array([[1,2],
               [3,4]])
 np.median(b)
 
+# doi chieu
 a.reshape(-1, 1)
 a.reshape(1, -1)
+
+# phep dot
+x = np.array([2,3])
+y = np.array([4,2])
+print(np.dot(x,y)) # 2x4 + 3x2 = 14
+
+arr = np.array([(1,2,3),(4,5,6),(7,8,9)])
+print(arr)
+print(arr.cumsum(axis=0)) # axis = 0 là tính theo chiều dọc (tổng các hàng)
+print(arr.cumsum(axis=1)) # axis = 1 là tính theo chiều ngang (tổng các cột)
+
