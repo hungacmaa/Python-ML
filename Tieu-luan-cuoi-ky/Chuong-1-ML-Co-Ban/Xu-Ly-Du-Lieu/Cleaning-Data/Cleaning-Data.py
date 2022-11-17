@@ -36,3 +36,25 @@ print(Duplicate_dataset.duplicated(keep="first"))
 
 print(Duplicate_dataset.drop_duplicates(keep = "first", # Giữ lại giá trị trùng lặp đầu tiên
                                         inplace=False)) # Không thay đổi tập dữ liệu gốc
+
+# Chuẩn hóa dữ liệu
+Nomalize_dataset = pd.read_csv("NormalizeColumns.csv")
+print(Nomalize_dataset)
+
+from sklearn import preprocessing
+x = Nomalize_dataset.values.astype(float) # lấy mảng dữ liệu (numpy) đưa về kiểu float
+scaler = preprocessing.MinMaxScaler() # gọi đối tượng min_max scaler
+x = scaler.fit_transform(x) 
+new_Nomalize_dataset = pd.DataFrame(x, columns = Nomalize_dataset.columns)
+print(new_Nomalize_dataset)
+
+# Xử lý outlier
+import matplotlib.pyplot as plt
+Outlier_dataset = pd.DataFrame({"Point":[1,4,2,5,10,15,9999,0]})
+Outlier_dataset.Point.plot(kind="box")
+plt.show()
+
+Outlier_dataset = Outlier_dataset.loc[Outlier_dataset.Point<5000]
+Outlier_dataset = Outlier_dataset.reset_index(drop=True)
+print(Outlier_dataset)
+
