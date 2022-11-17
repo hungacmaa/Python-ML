@@ -107,17 +107,17 @@ plt.show()
 X = data[['cc','kt','tl']].values
 y = data.iloc[:,3].values
 
-x_train, x_test, Y_train, Y_test = train_test_split(X, y, test_size = 0.2, random_state=5)
+x_train, x_test, Y_train, Y_test = train_test_split(X, y, test_size = 0.36, random_state=5)
 
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 model = linear_model.LinearRegression()
 model.fit(x_train, Y_train)
-y_pred = model.predict(X)
+y_pred = model.predict(x_test)
 print("diem cua bo train: "+str(model.score(x_train, Y_train)))
 print("diem cua bo test: "+str(model.score(x_test, Y_test)))
 print("mse: "+str(mean_squared_error(Y_test, y_pred))) #cang thap cang tot
-print("r2: "+str(r2_score(y, y_pred))) #cang cao cang tot
+print("r2: "+str(r2_score(Y_test, y_pred))) #cang cao cang tot
 
 # print(model.intercept_)
 # print(model.coef_)
