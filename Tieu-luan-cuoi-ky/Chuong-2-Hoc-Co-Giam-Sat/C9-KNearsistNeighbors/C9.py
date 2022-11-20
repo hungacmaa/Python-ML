@@ -7,15 +7,14 @@ import matplotlib.pyplot as plt
 data = pd.read_csv("knn.csv")
 sns.lmplot('x', 'y', data=data,
 hue='c', palette='Set1',
-fit_reg=False, 
-scatter_kws={"s": 100})# size của điểm
+fit_reg=False, scatter_kws={"s": 70})
 plt.show()
 
 #---to calculate the distance between two points---
 def euclidean_distance(pt1, pt2, dimension):
     distance = 0
     for x in range(dimension):
-        distance += np.square(pt1[x] - pt2[x]) # bình phương
+        distance += np.square(pt1[x] - pt2[x])
     return np.sqrt(distance)
 
 #---our own KNN model---
