@@ -26,7 +26,8 @@ print((data.isnull().sum()/so_sv)*100) # phần trăm ô null
 data.fillna(data.mean(numeric_only=True), inplace = True) # replace NaN with the mean
 
 # data.to_csv("diemtk.csv", index = False)
-
+data = pd.read_csv('diemtk.csv')
+print(data.dtypes)
 # ------------------------------------------------------------------------
 
 # ------------------ F E A T U R E S      S E L E C T I O N ----------------------
@@ -109,6 +110,7 @@ y = data.iloc[:,3].values
 
 x_train, x_test, Y_train, Y_test = train_test_split(X, y, test_size = 0.36, random_state=5)
 
+print(X.dtype)
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 model = linear_model.LinearRegression()
