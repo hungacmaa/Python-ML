@@ -36,6 +36,8 @@ df.fillna(df.mean(), inplace = True) # replace NaN with the mean
 corr = df.corr()
 print(corr)
 
+print(corr.iloc[:8, 8])
+
 fig, ax = plt.subplots(figsize=(10, 10))
 cax = ax.matshow(corr,cmap='coolwarm', vmin=-1, vmax=1)
 fig.colorbar(cax)
@@ -55,6 +57,8 @@ plt.show()
 print(df.corr().nlargest(4, 'Outcome').index)
 print(df.corr().nlargest(4, 'Outcome').values[:,8])
 
+print(df.corr().nlargest(4, 'Outcome').iloc[:,8])
+
 from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 #---features---
@@ -69,22 +73,22 @@ result = []
 result.append(log_regress_score)
 
 print(type(X.values))
+
 from sklearn.neighbors import KNeighborsClassifier
-#---empty list that will hold cv (cross-validates) scores---
+
 cv_scores = []
-#---number of folds---
+
 folds = 10
-# print(int(len(X) * ((folds - 1)/folds))
-#---creating odd list of K for KNN---
-ks = list(range(1,int(len(X) * ((folds - 1)/folds)), 2))
-#---perform k-fold cross validation---
+
+ks = list(range(1,70, 2))
+
 for k in ks:
     knn = KNeighborsClassifier(n_neighbors=k)
-    score = cross_val_score(knn, X.values, y.values, cv=folds, scoring='accuracy').mean()
+    score = cross_val_score(knn, X.values, y.values, cv=10, scoring='accuracy').mean()
     cv_scores.append(score)
-#---get the maximum score---
+
 knn_score = max(cv_scores)
-#---find the optimal k that gives the highest score---
+
 optimal_k = ks[cv_scores.index(knn_score)]
 print(f"The optimal number of neighbors is {optimal_k}")
 print(knn_score)
@@ -101,6 +105,8 @@ rbf = svm.SVC(kernel='rbf')
 rbf_score = cross_val_score(rbf, X, y, cv=10, scoring='accuracy').mean()
 print(rbf_score)
 result.append(rbf_score)
+
+result.pop(2)
 
 algorithms = ["Logistic Regression", "K Nearest Neighbors", "SVM Linear Kernel", "SVM RBF Kernel"]
 cv_mean = pd.DataFrame(result,index = algorithms)
